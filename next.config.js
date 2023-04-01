@@ -1,6 +1,4 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
   reactStrictMode: true,
-}
-
-module.exports = nextConfig
+  transpilePackages: ["@zerodevapp/wagmi", "@zerodevapp", "@web3", "wagmi"],
+};
