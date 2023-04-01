@@ -11,7 +11,7 @@
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.12.5",
     "@sismo-core/zk-connect-react": "^0.0.4",
-    "@sismo-core/zk-connect-server": "^0.0.3",
+    "@sismo-core/zk-connect-server": "0.0.4",
     "@types/node": "18.15.11",
     "@types/react": "18.0.31",
     "@types/react-dom": "18.0.11",

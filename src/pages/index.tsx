@@ -11,6 +11,7 @@ import { useAccount, useConnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { useState } from "react";
 import { Vote } from "@/components/vote";
+import { ethers } from "ethers";
 
 export const zkConnectConfig: ZkConnectClientConfig = {
   appId: "0x03e869be5fa809ca90f1b77a8e31b86f",
@@ -22,10 +23,13 @@ export default function Home() {
   const [zkResponse, setZkResponse] = useState<ZkConnectResponse | undefined>(
     undefined
   );
+
   const { address, isConnected } = useAccount();
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
+
+  const signedMessage = ethers.utils.defaultAbiCoder.encode(["uint"], ["1"]);
 
   return (
     <>
@@ -36,6 +40,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative flex h-16 items-center justify-between mt-5">
+          <div className="text-xl font-bold">ZkAnonVote</div>
+          {isConnected ? (
+            <div>Connected to {address}</div>
+          ) : (
+            <button onClick={() => connect()}>Connect Wallet</button>
+          )}
+        </div>
+
         <ZkConnectButton
           config={zkConnectConfig}
           claimRequest={{
@@ -44,22 +57,22 @@ export default function Home() {
           authRequest={{
             authType: AuthType.ANON,
           }}
-          messageSignatureRequest="abc"
+          messageSignatureRequest={ethers.utils.defaultAbiCoder.encode(
+            ["uint"],
+            ["1"]
+          )}
           onResponse={async (zkConnectResponse: ZkConnectResponse) => {
-            console.log("zk connect response", zkConnectResponse);
-            const response = await fetch("/api/verify", {
+            await fetch("/api/verify", {
               method: "POST",
-              body: JSON.stringify({ zkConnectResponse: zkConnectResponse }),
+              body: JSON.stringify({
+                zkConnectResponse: zkConnectResponse,
+                signedMessage: signedMessage,
+              }),
             });
             setZkResponse(zkConnectResponse);
           }}
         />
         {/* <RainbowKit /> */}
-        {isConnected ? (
-          <div>Connected to {address}</div>
-        ) : (
-          <button onClick={() => connect()}>Connect Wallet</button>
-        )}
 
         <Vote zkResp={responseBytes} />
       </main>
