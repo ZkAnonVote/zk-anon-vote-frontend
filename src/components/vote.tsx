@@ -26,7 +26,7 @@ export function Vote({ zkConnectRes }: { zkConnectRes: string }) {
   return (
     <button
       type="button"
-      className="text-lg rounded-full bg-white px-6 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 mb-20"
+      className="text-lg rounded-full bg-white px-6 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 mt-4"
       onClick={handleClick}
       disabled={isLoading}
     >

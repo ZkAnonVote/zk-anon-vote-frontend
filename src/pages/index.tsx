@@ -33,7 +33,6 @@ export default function Home() {
           <RainbowKit />
         </div>
         <Projects ZkConnect={ZkConnect} />
-        {responseBytes && <Vote zkConnectRes={responseBytes} />}
       </main>
     </>
   );
