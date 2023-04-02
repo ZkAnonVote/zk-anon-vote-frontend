@@ -1,28 +1,36 @@
-import { ethers } from "ethers";
-import { useContract, usePrepareContractWrite, useContractWrite } from "wagmi";
+import { usePrepareContractWrite, useContractWrite } from "wagmi";
 import contractAbi from "../../zk-ballot-box.abi.json" assert { type: "json" };
-import { ZkConnectResponse } from "@sismo-core/zk-connect-react";
+import { useCallback } from "react";
+import { ethers } from "ethers";
 
-export function Vote({ zkResp }: { zkResp: string }) {
+export function Vote({ zkConnectRes }: { zkConnectRes: string }) {
   const { config } = usePrepareContractWrite({
-    address: "0x5f4eb7d46a58a0c12608a525401e0c3a75b960f7",
+    address: "0xA24953B4cFA339378F83C3B5d052dcd3AA562af2",
     abi: contractAbi,
     chainId: 5,
     functionName: "vote",
-    args: [zkResp, 1],
+    args: [zkConnectRes, 1],
     overrides: {
-      gasLimit: ethers.utils.parseUnits("0.001", "ether"),
+      gasLimit: ethers.utils.parseUnits("0.00000000001", "ether"),
     },
   });
-  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  const { write: vote, isLoading } = useContractWrite(config);
+
+  const handleClick = useCallback(() => {
+    if (vote) {
+      vote();
+    }
+  }, [vote]);
 
   return (
     <button
       type="button"
       className="text-lg rounded-full bg-white px-6 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-      onClick={write}
+      onClick={handleClick}
+      disabled={isLoading}
     >
-      Vote
+      {isLoading ? "Loading..." : "Mint NFT"}
     </button>
   );
 }
